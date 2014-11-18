@@ -1,4 +1,5 @@
 ﻿var Rule = require('../Rule');
+var Q = require('q');
 
 var AlwaysOnRule = function () { };
 AlwaysOnRule.prototype = new Rule();

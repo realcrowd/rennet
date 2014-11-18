@@ -2,7 +2,7 @@
 var Patch = require('../models/Patch');
 var rules = require('../models/rules');
 
-describe('Patch Tests', function () {
+describe('Patch', function () {
     it('constructs itself as expected', function () {
         var patch = new Patch();
         assert.equal(patch.id, null, "id is supposed to be null");
@@ -11,41 +11,16 @@ describe('Patch Tests', function () {
         assert.ok(patch.data != null && typeof patch.data === 'object', "data should be an object");
     });
     
-    it('should not apply a patch', function (done) {
-        var level1 = new Patch();
-        level1.data = { };
-        level1.rule = new StringMatchesRule();
-        level1.rule.arguments.jsonPath = '$.environment';
-        level1.rule.arguments.matches = 'live';
-        
-        var context = {
-            'environment': 'dev'
-        };
-        
-        level1
-            .shouldApply(context)
-            .then(function (shouldApply) {
-                assert.equal(shouldApply, false, 'shouldApply should have returned false.');
-                done();
-            })
-            .catch(function(error) {
-                done(error);
-            });
-    });
-
     it('applies a patch', function (done) {
         var level1 = new Patch();
         level1.data = {
             'features': {
-                'a': false,
+                'a': false
             }
         };
-        level1.rule = new StringMatchesRule();
-        level1.rule.arguments.jsonPath = '$.environment';
-        level1.rule.arguments.matches = 'live';
-        
+        level1.rule = new rules.AlwaysOnRule();
+
         var context = {
-            'environment': 'live',
             'data': {
                 'features': {
                     'a': true,
@@ -55,11 +30,7 @@ describe('Patch Tests', function () {
         };
         
         level1
-            .shouldApply(context)
-            .then(function (shouldApply) {
-                assert.ok(shouldApply, 'Should apply should have been true');
-                return level1.apply(context);
-            })
+            .apply(context)
             .then(function (patchedContext) {
                 var expectedData = {
                     'features': {
@@ -70,8 +41,32 @@ describe('Patch Tests', function () {
                 assert.deepEqual(context.data, expectedData, 'Unexpected patch/merge result');
                 done();
             })
-            .catch(function (error) {
-                done(error);
-            });;
+            .catch(done);
+    });
+
+    it('shouldApply works', function (done) {
+        var level1 = new Patch();
+        level1.rule = new rules.AlwaysOnRule();
+
+        level1
+            .shouldApply({})
+            .then(function (shouldApply) {
+                assert.ok(shouldApply, 'Should apply should have been true');
+                done();
+            })
+            .catch(done);
+    });
+
+    it('shouldApply works negative', function (done) {
+        var level1 = new Patch();
+        level1.rule = new rules.AlwaysOffRule();
+
+        level1
+            .shouldApply({})
+            .then(function (shouldApply) {
+                assert.ok(!shouldApply, 'Should apply should have been false');
+                done();
+            })
+            .catch(done);
     });
 });

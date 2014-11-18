@@ -1,5 +1,6 @@
 ﻿var Rule = require('../Rule');
 var jsonPathEngine = require('JSONPath');
+var Q = require('q');
 
 var ArrayContainsRule = function () { };
 ArrayContainsRule.prototype = new Rule();

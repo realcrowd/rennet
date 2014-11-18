@@ -22,8 +22,17 @@ Patch.prototype.apply = function (context) {
     var applyAtJsonPath = this.applyAtJsonPath;
 
     return Q.fcall(function() {
-        var applyToObject = jsonPathEngine.eval(context, applyAtJsonPath);
-        extend(true, applyToObject, data);
+        var matchingNodes = jsonPathEngine.eval(context, applyAtJsonPath);
+        if (matchingNodes.length == 0) {
+            throw new Error('Nothing found in context at "' + applyAtJsonPath + '". Unable to apply patch.')
+        }
+
+        //go patch all the paths it found
+        var len = matchingNodes.length;
+        for (var i = 0; i < len; i++) {
+            extend(true, matchingNodes[i], data);
+        }
+
         return context;
     });
 };

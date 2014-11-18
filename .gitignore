@@ -40,7 +40,8 @@ bower_components
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
 
 # Thumbnails
 ._*
@@ -78,3 +79,6 @@ $RECYCLE.BIN/
 # Node tools for Visual Studio
 .ntvs_analysis.dat
 *.suo
+
+#WebStorm/IntelliJ projects
+.idea
