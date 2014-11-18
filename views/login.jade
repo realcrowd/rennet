@@ -1,0 +1,9 @@
+﻿extends layout
+
+block content
+  h1= title
+  div(ng-controller="LoginController")
+    div
+        a(href="/auth/google") Login with Google
+    div
+        a(href="/logout") Logout

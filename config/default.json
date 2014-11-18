@@ -1,0 +1,8 @@
+﻿{
+    "Security": {
+        "allowedAuthDomain": "realcrowd.com"
+    },
+    "App": { 
+        "root": "http://localhost:1337"
+    }
+}

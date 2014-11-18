@@ -1,0 +1,25 @@
+﻿mixin ie(condition)
+  | <!--[!{condition}]>
+  block
+  | <![endif]-->
+
+doctype html
+html(ng-app="rennetApp", lang="en")
+  head
+    title= title
+    meta(charset="utf-8")
+    meta(http-equiv="X-UA-Compatible", content="IE=edge")
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+
+    link(rel='stylesheet', href='/bower_components/bootstrap/dist/css/bootstrap.css')
+    link(rel='stylesheet', href='/bower_components/bootstrap/dist/css/bootstrap-theme.css')
+
+    +ie('if lt IE 9')
+        script(src='/bower_components/html5shiv/dist/html5shiv.min.js', type='text/javascript')
+        script(src='/bower_components/respond/dist/respond.min.js', type='text/javascript')
+  body
+    block content
+    script(src='/bower_components/jquery/dist/jquery.js', type='text/javascript')
+    script(src='/bower_components/bootstrap/dist/js/bootstrap.js', type='text/javascript')
+    script(src='/bower_components/angularjs/angular.js', type='text/javascript')
+    script(src='/js/rennet.js', type='text/javascript')

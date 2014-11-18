@@ -1,0 +1,33 @@
+{
+  "name": "rennet",
+  "version": "1.0.0",
+  "authors": [
+    "JD Conley <jd@realcrowd.com>"
+  ],
+  "description": "Coagulating application metadata",
+  "main": "app.js",
+  "moduleType": [
+    "node"
+  ],
+  "keywords": [
+    "metadata",
+    "features",
+    "stuff"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/realcrowd/rennet",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angularjs": "~1.3.2",
+    "bootstrap": "~3.3.0",
+    "html5shiv": "~3.7.2",
+    "respond": "~1.4.2"
+  }
+}
