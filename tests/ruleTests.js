@@ -106,3 +106,31 @@ describe('StringMatchesRule', function () {
             .catch(done);
     });
 });
+
+describe('ArrayContainsRule', function () {
+    it('works correctly', function (done) {
+        var rule = new rules.ArrayContainsRule();
+        rule.arguments.jsonPath = '$.environments';
+        rule.arguments.matches = 'live';
+
+        rule.evaluate({'environments':['live', 'dev']})
+            .then(function(on){
+                assert.ok(on, 'ArrayContainsRule was not on');
+                done();
+            })
+            .catch(done);
+    });
+
+    it('works in the negative', function (done) {
+        var rule = new rules.ArrayContainsRule();
+        rule.arguments.jsonPath = '$.environments';
+        rule.arguments.matches = 'live';
+
+        rule.evaluate({'environments':['qa', 'dev']})
+            .then(function(on){
+                assert.ok(!on, 'ArrayContainsRule was on');
+                done();
+            })
+            .catch(done);
+    });
+});
