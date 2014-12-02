@@ -113,7 +113,20 @@ describe('ArrayContainsRule', function () {
         rule.arguments.jsonPath = '$.environments';
         rule.arguments.matches = 'live';
 
-        rule.evaluate({'environments':['live', 'dev']})
+        rule.evaluate({'environments':['dev', 'live']})
+            .then(function(on){
+                assert.ok(on, 'ArrayContainsRule was not on');
+                done();
+            })
+            .catch(done);
+    });
+
+    it('works with multiple matches', function (done) {
+        var rule = new rules.ArrayContainsRule();
+        rule.arguments.jsonPath = '$.environments';
+        rule.arguments.matches = 'live';
+
+        rule.evaluate({'environments':['live', 'live', 'dev', 'live']})
             .then(function(on){
                 assert.ok(on, 'ArrayContainsRule was not on');
                 done();
@@ -127,6 +140,45 @@ describe('ArrayContainsRule', function () {
         rule.arguments.matches = 'live';
 
         rule.evaluate({'environments':['qa', 'dev']})
+            .then(function(on){
+                assert.ok(!on, 'ArrayContainsRule was on');
+                done();
+            })
+            .catch(done);
+    });
+
+    it('works in the negative with empty array', function (done) {
+        var rule = new rules.ArrayContainsRule();
+        rule.arguments.jsonPath = '$.environments';
+        rule.arguments.matches = 'live';
+
+        rule.evaluate({'environments':[]})
+            .then(function(on){
+                assert.ok(!on, 'ArrayContainsRule was on');
+                done();
+            })
+            .catch(done);
+    });
+
+    it('works in the negative with null array', function (done) {
+        var rule = new rules.ArrayContainsRule();
+        rule.arguments.jsonPath = '$.environments';
+        rule.arguments.matches = 'live';
+
+        rule.evaluate({'environments':null})
+            .then(function(on){
+                assert.ok(!on, 'ArrayContainsRule was on');
+                done();
+            })
+            .catch(done);
+    });
+
+    it('works in the negative with invalid jsonPath', function (done) {
+        var rule = new rules.ArrayContainsRule();
+        rule.arguments.jsonPath = '$.thisNodeDoesNotExist';
+        rule.arguments.matches = 'live';
+
+        rule.evaluate({'environments':null})
             .then(function(on){
                 assert.ok(!on, 'ArrayContainsRule was on');
                 done();

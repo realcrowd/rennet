@@ -5,9 +5,7 @@ var AlwaysOnRule = function () { };
 AlwaysOnRule.prototype = new Rule();
 
 AlwaysOnRule.prototype.evaluate = function(context) {
-    return Q.fcall(function() {
-        return true;
-    });
+    return Q(true);
 };
 
 module.exports = AlwaysOnRule;

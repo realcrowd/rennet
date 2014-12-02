@@ -11,24 +11,21 @@ ArrayContainsRule.prototype.arguments = {
 };
 
 ArrayContainsRule.prototype.evaluate = function (context) {
-    var args = this.arguments;
-    return Q.fcall(function () {
-        var arrayToEvaluate = jsonPathEngine.eval(context, args.jsonPath);
-        
-        if (!Array.isArray(arrayToEvaluate)) {
-            return false;
+    var arrayToEvaluate = jsonPathEngine.eval(context, this.arguments.jsonPath);
+
+    if (!Array.isArray(arrayToEvaluate)) {
+        return Q(false);
+    }
+
+    var rx = new RegExp(this.arguments.matches);
+    var len = arrayToEvaluate.length;
+    for (var i = 0; i < len; i++) {
+        if (String(arrayToEvaluate[i]).match(rx) !== null) {
+            return Q(true);
         }
-        
-        var rx = new RegExp(args.matches);
-        var len = arrayToEvaluate.length;
-        for (var i = 0; i < len; i++) {
-            if (String(arrayToEvaluate[i]).match(rx) !== null) {
-                return true;
-            }
-        }
-        
-        return false;
-    });
+    }
+
+    return Q(false);
 };
 
 module.exports = ArrayContainsRule;

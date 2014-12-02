@@ -1,5 +1,9 @@
-﻿var Rule = function () {
+﻿var Rule = function (obj) {
     this.arguments = {};
+
+    for (var prop in obj) {
+        this[prop] = obj[prop];
+    }
 };
 
 Rule.prototype.evaluate = function (context) {

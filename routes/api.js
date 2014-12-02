@@ -1,26 +1,20 @@
 ﻿var express = require('express');
 var router = express.Router();
+var RennetService = require('../services/RennetService');
 
 /*
- * POST the context, returning the data set for the namespace/patch
+ * POST the context, returning the data set for the repository/branches
  */ 
-router.post('/data/:namespaceId/:basePatchId', function (req, res) {
-    //look for cached namespace/base config
+router.post('/dataset/:repositoryId/:branchId', function (req, res, next) {
+    var rennetService = new RennetService();
 
-    //read baseline settings for application
-
-    //read settings for environment
-
-    //merge environment into baseline
-
-    //cache application/environment config
-
-
-    //read patches for environment
-    //load rules for selected patches
-    //apply patches if rules match
-
-    //return data resulting from applied rules
+    rennetService
+        .resolveContext(req.params.repositoryId, req.params.branchId, req.body)
+        .then(function(context){
+            res.send(context);
+            next();
+        })
+        .catch(next);
 });
 
 module.exports = router;
