@@ -50,7 +50,7 @@ RennetService.prototype.resolveContext = function(repositoryId, branchId, contex
     var patchProvider = this.patchProvider;
     var patchService = this;
 
-    //get the repositoryId map so we know how to apply patches
+    //get the repository index so we know how to apply patches
     return this.repositoryIndexProvider.getRepositoryIndex(repositoryId)
         .then(function(repositoryIndex) {
             if (!repositoryIndex) {
