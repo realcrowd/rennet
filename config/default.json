@@ -1,8 +1,18 @@
-﻿{
+{
     "Security": {
         "allowedAuthDomain": "realcrowd.com"
     },
-    "App": { 
+    "App": {
         "root": "http://localhost:1337"
+    },
+    "Providers": {
+        "patchProvider": "DocumentDbPatchProvider",
+        "repositoryIndexProvider": "DocumentDbRepositoryIndexProvider"
+    },
+    "DocumentDbRepositoryIndexProvider": {
+        "hostEndpoint": "localhost",
+        "masterKey": "masterkey",
+        "databaseId": "id",
+        "collectionId": "id"
     }
 }

@@ -1,0 +1,6 @@
+{
+  "Providers": {
+    "patchProvider": "InProcessPatchProvider",
+    "repositoryIndexProvider": "InProcessRepositoryIndexProvider"
+  }
+}

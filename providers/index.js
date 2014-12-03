@@ -1,6 +1,7 @@
-//TODO: choose these with an IoC, or do DI into the consumers
+//Doing a lil cheesy IoC here based on configuration
+var config = require('config');
 
 module.exports = {
-    PatchProvider: require('./InProcessPatchProvider'),
-    RepositoryIndexProvider: require('./InProcessRepositoryIndexProvider')
+    PatchProvider: require('./' + config.get('Providers.patchProvider')),
+    RepositoryIndexProvider: require('./' + config.get('Providers.repositoryIndexProvider'))
 };
