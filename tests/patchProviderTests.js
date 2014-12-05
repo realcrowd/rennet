@@ -54,9 +54,7 @@ describe('Patch Providers', function () {
             .then(function(){
                 done();
             })
-            .catch(function(error){
-                done(error);
-            });
+            .catch(done);
     });
 
 

@@ -16,46 +16,24 @@ var DocumentDbPatchProvider = function(configuration){
 DocumentDbPatchProvider.prototype = new PatchProvider();
 
 DocumentDbPatchProvider.prototype.getPatchDocumentId = function(repositoryId, id) {
-    return "patch-" + repositoryId + "-" + id;
+    return "Patch-" + repositoryId + "-" + id;
 };
 
 DocumentDbPatchProvider.prototype.getPatch = function(repositoryId, id) {
-    return this.getPatchDocument(repositoryId, id)
-        .then(function(patchDocument){
-            return new Patch(patchDocument.data);
+    var documentId = this.getPatchDocumentId(repositoryId, id);
+    return this.client
+        .getDocument(documentId)
+        .then(function(document){
+            return new Patch(document.data);
         });
 };
 
-DocumentDbPatchProvider.prototype.getPatchDocument = function(repositoryId, id) {
-    var patchDocumentId = this.getPatchDocumentId(repositoryId, id);
-    return this.client.getDocument(patchDocumentId);
-};
-
 DocumentDbPatchProvider.prototype.putPatch = function(repositoryId, patch) {
-    var patchDocumentId = this.getPatchDocumentId(repositoryId, patch.id);
-    var that = this;
-
-    return that.getPatchDocument(repositoryId, patch.id)
-        .then(function(patchDocument){
-            return that.client.getDocumentClient()
-                .then(function(documentClient){
-                    if (patchDocument) {
-                        patchDocument.data = patch;
-
-                        return documentClient.replaceDocumentAsync(patchDocument._self, patchDocument);
-                    }
-
-                    patchDocument = {
-                        data: patch,
-                        id: patchDocumentId,
-                        type: "Patch"
-                    };
-
-                    return documentClient.createDocumentAsync(that.client.collection._self, patchDocument);
-                });
-        })
-        .then(function(createOrReplaceResult){
-            return new Patch(createOrReplaceResult.resource.data);
+    var documentId = this.getPatchDocumentId(repositoryId, patch.id);
+    return this.client
+        .putDocument(documentId, { data: patch, type: "Patch" })
+        .then(function(document){
+            return new Patch(document.data);
         });
 };
 
