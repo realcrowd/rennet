@@ -1,5 +1,6 @@
 var Q = require('q');
 var DocumentClientWrapper = require('documentdb').DocumentClientWrapper;
+var extend = require('extend');
 
 var DocumentDbCollectionClient = function(collectionConfig) {
     this.config = collectionConfig;
@@ -45,6 +46,30 @@ DocumentDbCollectionClient.prototype.getDocument = function(id) {
 
                     return queryResult.feed[0];
                 });
+        });
+};
+
+DocumentDbCollectionClient.prototype.putDocument = function(id, data) {
+    var that = this;
+
+    return that.getDocument(id)
+        .then(function(document){
+            if (document) {
+                extend(true, document, data);
+
+                return that.client.replaceDocumentAsync(document._self, document);
+            }
+
+            document = {
+                id: id
+            };
+
+            extend(true, document, data);
+
+            return that.client.createDocumentAsync(that.collection._self, document);
+        })
+        .then(function(createOrReplaceResult){
+            return createOrReplaceResult.resource;
         });
 };
 
