@@ -3,9 +3,9 @@ var router = express.Router();
 var RennetService = require('../services/RennetService');
 
 /*
- * POST the context, returning the data set for the repository/branches
+ * POST the context, returning the data set for the repository/branch
  */ 
-router.post('/dataset/:repositoryId/:branchId', function (req, res, next) {
+router.post('/context/:repositoryId/:branchId', function (req, res, next) {
     var rennetService = new RennetService();
 
     rennetService
