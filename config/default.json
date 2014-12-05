@@ -6,13 +6,17 @@
         "root": "http://localhost:1337"
     },
     "Providers": {
-        "patchProvider": "DocumentDbPatchProvider",
-        "repositoryIndexProvider": "DocumentDbRepositoryIndexProvider"
+        "patchProvider": "documentdb/DocumentDbPatchProvider",
+        "repositoryIndexProvider": "documentdb/DocumentDbRepositoryIndexProvider"
     },
-    "DocumentDbRepositoryIndexProvider": {
-        "hostEndpoint": "localhost",
-        "masterKey": "masterkey",
-        "databaseId": "id",
-        "collectionId": "id"
+    "DocumentDbPatchProvider": {
+        "documentDbConnection": {
+            "urlConnection": "https://rennet-oss.documents.azure.com:443/",
+            "auth": {"masterKey":"7rvoVz+UvuFOnxjCGbMilgdRlJX3r1KS8VWwaYVoDWo87KbXggUqa98shuTAVCeW9kn3a2I1PwH5qMB+Q659ng=="},
+            "databaseDefinition": {"id": "rennet-demo"},
+            "collectionDefinition": {"id": "rennet"},
+            "connectionPolicy":null,
+            "consistencyLevel":"Session"
+        }
     }
 }

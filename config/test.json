@@ -2,5 +2,15 @@
   "Providers": {
     "patchProvider": "InProcessPatchProvider",
     "repositoryIndexProvider": "InProcessRepositoryIndexProvider"
+  },
+  "DocumentDbPatchProvider": {
+    "documentDbConnection": {
+      "urlConnection": "https://rennet-oss.documents.azure.com:443/",
+      "auth": {"masterKey":"7rvoVz+UvuFOnxjCGbMilgdRlJX3r1KS8VWwaYVoDWo87KbXggUqa98shuTAVCeW9kn3a2I1PwH5qMB+Q659ng=="},
+      "databaseDefinition": {"id": "rennet-demo"},
+      "collectionDefinition": {"id": "rennet-tests"},
+      "connectionPolicy":null,
+      "consistencyLevel":"Session"
+    }
   }
 }

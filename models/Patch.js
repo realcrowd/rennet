@@ -11,6 +11,12 @@ var Patch = function (obj) {
     for (var prop in obj) {
         this[prop] = obj[prop];
     }
+
+    //Setup expected prototype for the rule
+    if (this.rule && this.rule.name) {
+        var RuleConstructor = require('./rules')[this.rule.name];
+        this.rule = new RuleConstructor(this.rule);
+    }
 };
 
 Patch.prototype.shouldApply = function (context) {

@@ -25,15 +25,6 @@ InProcessPatchProvider.prototype.getPatch = function(repositoryId, id) {
     return Q(clone);
 };
 
-PatchProvider.prototype.getPatches = function(repositoryId, patchIds) {
-    var patchProvider = this;
-    return Q.fcall(function(){
-        return patchIds.map(function(patchId){
-            return patchProvider.getPatch(repositoryId, patchId);
-        });
-    }).all();
-};
-
 InProcessPatchProvider.prototype.putPatch = function(repositoryId, patch) {
     var patches = this.patches;
 

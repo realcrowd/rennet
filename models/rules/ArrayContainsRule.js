@@ -2,7 +2,14 @@
 var jsonPathEngine = require('JSONPath');
 var Q = require('q');
 
-var ArrayContainsRule = function () { };
+var ArrayContainsRule = function (obj) {
+    this.name = "ArrayContainsRule";
+    this.arguments = {};
+
+    for (var prop in obj) {
+        this[prop] = obj[prop];
+    }
+};
 ArrayContainsRule.prototype = new Rule();
 
 ArrayContainsRule.prototype.arguments = {

@@ -69,4 +69,22 @@ describe('Patch', function () {
             })
             .catch(done);
     });
+
+    it ('errors on unknown rule name in constructor', function() {
+        assert.throws(function(){
+            new Patch({
+                rule: {name:'thisisnotthenameofarule'}
+            });
+        });
+    });
+
+    it ('constructs expected rule in constructor', function() {
+        var patch = new Patch({
+            rule: {name:'AlwaysOnRule'}
+        });
+        assert.equal(patch.rule.name, 'AlwaysOnRule');
+        var AlwaysOnRule = require('../models/rules/AlwaysOnRule');
+        assert.ok(patch.rule instanceof AlwaysOnRule);
+    });
+
 });

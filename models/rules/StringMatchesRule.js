@@ -2,7 +2,14 @@
 var jsonPathEngine = require('JSONPath');
 var Q = require('q');
 
-var StringMatchesRule = function () { };
+var StringMatchesRule = function (obj) {
+    this.name = "StringMatchesRule";
+    this.arguments = {};
+
+    for (var prop in obj) {
+        this[prop] = obj[prop];
+    }
+};
 StringMatchesRule.prototype = new Rule();
 
 StringMatchesRule.prototype.arguments = {
