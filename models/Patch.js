@@ -20,8 +20,9 @@ var Patch = function (obj) {
 };
 
 Patch.prototype.shouldApply = function (context) {
+    //No rule means apply no matter what, for simplicity of the JSON.
     if (!this.rule) {
-        throw new Error("A rule must be specified. Unable to evaluate.");
+        return Q(true);
     }
     
     return this.rule.evaluate(context);
