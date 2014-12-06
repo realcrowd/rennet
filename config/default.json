@@ -1,10 +1,4 @@
 {
-    "Security": {
-        "allowedAuthDomain": "realcrowd.com"
-    },
-    "App": {
-        "root": "http://localhost:1337"
-    },
     "Providers": {
         "patchProvider": "documentdb/DocumentDbPatchProvider",
         "repositoryIndexProvider": "documentdb/DocumentDbRepositoryIndexProvider"

@@ -1,5 +1,5 @@
 ﻿var rennetApp = angular.module('rennetApp', []);
 
-rennetApp.controller('LoginController', ['$scope', function($scope) {
+rennetApp.controller('RennetController', ['$scope', function($scope) {
     $scope.value = new Date();
 }]);

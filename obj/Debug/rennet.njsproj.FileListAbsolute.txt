@@ -1,2 +1,0 @@
-C:\Users\jdconley\Documents\github\rennet\obj\Debug\rennet.njsprojResolveAssemblyReference.cache
-C:\Users\jdconley\Documents\github\rennet\bin\Microsoft.NodejsTools.WebRole.dll

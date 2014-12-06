@@ -58,7 +58,7 @@ Now we'll update the repository index to define a few branches and put the patch
 ### Apply Branch and Patches to a Context
 Now we can use all this data we stored. POST to the repository and branch you want with your application's context. In this case we're just including the expected "user.plan" object that is used in the patch rules. You might also include user id, user roles, a/b test group id, data center id, operating system type, etc to further vary the data.
 
-Notice we also include a "data" node in the context. The patches apply directly to the context at the node that is specified in the (patch)[https://github.com/realcrowd/rennet/blob/master/models/Patch.js]. The default location is "$.data", but you can change that in the patch. We use the (JSONPath package)[https://www.npmjs.org/package/JSONPath] for locating where in the document hierarchy to apply patches and evaluate rules.
+Notice we also include a "data" node in the context. The patches apply directly to the context at the node that is specified in the [patch](https://github.com/realcrowd/rennet/blob/master/models/Patch.js). The default location is "$.data", but you can change that in the patch. We use the [JSONPath package](https://www.npmjs.org/package/JSONPath) for locating where in the document hierarchy to apply patches and evaluate rules.
 
 ```
 > curl -X POST -H "Content-Type: application/json" -d "{\"user\":{\"plan\":\"free\"},\"data\":{}}" http://localhost:1337/repository/github/branch/qa/context
@@ -81,6 +81,8 @@ Notice we also include a "data" node in the context. The patches apply directly 
 > npm install
 
 > bower install
+
+> node http.js
 ```
 
 ## Dev environment setup in Visual Studio / Windows
