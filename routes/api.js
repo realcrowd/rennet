@@ -20,6 +20,15 @@ var putRepository = function(req, res, next) {
 router.post('/repository/:repositoryId', putRepository);
 router.put('/repository/:repositoryId', putRepository);
 
+router.get('/repository/:repositoryId', function (req, res, next) {
+    rennetService.repositoryIndexProvider
+        .getRepositoryIndex(req.params.repositoryId)
+        .then(function(repositoryIndex){
+            res.send(repositoryIndex);
+        })
+        .catch(next);
+});
+
 var putPatch = function(req, res, next) {
     //TODO: handle etags
 
@@ -37,6 +46,15 @@ var putPatch = function(req, res, next) {
  */
 router.post('/repository/:repositoryId/patch/:patchId', putPatch);
 router.put('/repository/:repositoryId/patch/:patchId', putPatch);
+
+router.get('/repository/:repositoryId/patch/:patchId', function (req, res, next) {
+    rennetService.patchProvider
+        .getPatch(req.params.repositoryId, req.params.patchId)
+        .then(function(patch){
+            res.send(patch);
+        })
+        .catch(next);
+});
 
 /*
  * POST the context, returning the data set for the repository/branch
