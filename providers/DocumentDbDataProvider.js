@@ -1,20 +1,32 @@
 var Q = require('q');
 var DocumentClientWrapper = require('documentdb').DocumentClientWrapper;
 var extend = require('extend');
+var DataProvider = require('./DataProvider');
 
-var DocumentDbCollectionClient = function(collectionConfig) {
-    this.config = collectionConfig;
+var DocumentDbDataProvider = function(config) {
+    this.client = null;
+    this.database = null;
+    this.collection = null;
+
+    if (config) {
+        this.applyConfiguration(config);
+    }
+};
+
+DocumentDbDataProvider.prototype = new DataProvider();
+
+DocumentDbDataProvider.prototype.applyConfiguration = function(config) {
+    this.config = config;
+
     this.client = new DocumentClientWrapper(
         this.config.urlConnection,
         this.config.auth,
         this.config.connectionPolicy,
         this.config.consistencyLevel);
-
-    this.database = null;
-    this.collection = null;
 };
 
-DocumentDbCollectionClient.prototype.getDocumentClient = function() {
+
+DocumentDbDataProvider.prototype.getDocumentClient = function() {
     if (this.database && this.collection && this.client) {
         return Q(this.client);
     }
@@ -32,7 +44,7 @@ DocumentDbCollectionClient.prototype.getDocumentClient = function() {
         });
 };
 
-DocumentDbCollectionClient.prototype.getDocument = function(id) {
+DocumentDbDataProvider.prototype.getDocument = function(id) {
     var that = this;
     return this.getDocumentClient()
         .then(function(client) {
@@ -49,35 +61,35 @@ DocumentDbCollectionClient.prototype.getDocument = function(id) {
         });
 };
 
-DocumentDbCollectionClient.prototype.putDocument = function(id, data) {
+DocumentDbDataProvider.prototype.putDocument = function(id, document) {
     var that = this;
 
     return that.getDocument(id)
-        .then(function(document){
-            if (document) {
-                extend(true, document, data);
+        .then(function(updatedDocument){
+            if (updatedDocument) {
+                extend(true, updatedDocument, document);
 
-                return that.client.replaceDocumentAsync(document._self, document);
+                return that.client.replaceDocumentAsync(updatedDocument._self, updatedDocument);
             }
 
-            document = {
+            updatedDocument = {
                 id: id
             };
 
-            extend(true, document, data);
+            extend(true, updatedDocument, document);
 
-            return that.client.createDocumentAsync(that.collection._self, document);
+            return that.client.createDocumentAsync(that.collection._self, updatedDocument);
         })
         .then(function(createOrReplaceResult){
             return createOrReplaceResult.resource;
         });
 };
 
-DocumentDbCollectionClient.prototype.escapeParam = function(paramValue) {
+DocumentDbDataProvider.prototype.escapeParam = function(paramValue) {
     return paramValue.replace('"', '\\"');
 };
 
-DocumentDbCollectionClient.prototype.getOrCreateRootEntity = function(definition, queryFunc, queryThisArg, createFunc, createThisArg) {
+DocumentDbDataProvider.prototype.getOrCreateRootEntity = function(definition, queryFunc, queryThisArg, createFunc, createThisArg) {
     return queryFunc.call(queryThisArg, 'SELECT * FROM root r WHERE r.id="' + this.escapeParam(definition.id) + '"')
         .toArrayAsync()
         .then(function(queryResult) {
@@ -92,7 +104,7 @@ DocumentDbCollectionClient.prototype.getOrCreateRootEntity = function(definition
         });
 };
 
-DocumentDbCollectionClient.prototype.getOrCreateCollection = function(client, database, collectionDefinition) {
+DocumentDbDataProvider.prototype.getOrCreateCollection = function(client, database, collectionDefinition) {
     return this.getOrCreateRootEntity(
         collectionDefinition,
         function(query){return client.queryCollections(database._self, query);},
@@ -101,7 +113,7 @@ DocumentDbCollectionClient.prototype.getOrCreateCollection = function(client, da
         this);
 };
 
-DocumentDbCollectionClient.prototype.getOrCreateDatabase = function(client, databaseDefinition) {
+DocumentDbDataProvider.prototype.getOrCreateDatabase = function(client, databaseDefinition) {
     return this.getOrCreateRootEntity(
         databaseDefinition,
         client.queryDatabases,
@@ -110,4 +122,4 @@ DocumentDbCollectionClient.prototype.getOrCreateDatabase = function(client, data
         client);
 };
 
-module.exports = DocumentDbCollectionClient;
+module.exports = DocumentDbDataProvider;

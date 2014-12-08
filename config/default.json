@@ -1,6 +1,12 @@
 {
-    "Providers": {
-        "patchProvider": "InProcessPatchProvider",
-        "repositoryIndexProvider": "InProcessRepositoryIndexProvider"
+    "PatchService": {
+        "dataProvider": {
+            "module": "InProcessDataProvider"
+        }
+    },
+    "RepositoryIndexService": {
+        "dataProvider": {
+            "module": "InProcessDataProvider"
+        }
     }
 }

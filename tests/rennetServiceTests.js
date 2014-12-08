@@ -10,7 +10,7 @@ describe('Rennet Service', function () {
         var repositoryId = 'test';
 
         //test data
-        service.patchProvider.putPatch(repositoryId, new Patch({
+        service.patchService.putPatch(repositoryId, new Patch({
             id: 'constants',
             data: {
                 constants: {
@@ -22,7 +22,7 @@ describe('Rennet Service', function () {
             rule: new rules.AlwaysOnRule()
         }));
 
-        service.repositoryIndexProvider.putRepositoryIndex(new RepositoryIndex({
+        service.repositoryIndexService.putRepositoryIndex(new RepositoryIndex({
             id: repositoryId,
             branches: {
                 baseline: {
@@ -50,7 +50,7 @@ describe('Rennet Service', function () {
         var repositoryId = 'test';
 
         //test data
-        service.patchProvider.putPatch(repositoryId, new Patch({
+        service.patchService.putPatch(repositoryId, new Patch({
             id: 'constants',
             data: {
                 constants: {
@@ -62,7 +62,7 @@ describe('Rennet Service', function () {
             rule: new rules.AlwaysOnRule()
         }));
 
-        service.patchProvider.putPatch(repositoryId, new Patch({
+        service.patchService.putPatch(repositoryId, new Patch({
             id: 'two_is_three',
             data: {
                 constants: {
@@ -72,7 +72,7 @@ describe('Rennet Service', function () {
             rule: new rules.AlwaysOnRule()
         }));
 
-        service.repositoryIndexProvider.putRepositoryIndex(new RepositoryIndex({
+        service.repositoryIndexService.putRepositoryIndex(new RepositoryIndex({
             id: repositoryId,
             branches: {
                 baseline: {
@@ -103,7 +103,7 @@ describe('Rennet Service', function () {
         var repositoryId = 'test';
 
         //test data
-        service.patchProvider.putPatch(repositoryId, new Patch({
+        service.patchService.putPatch(repositoryId, new Patch({
             id: 'constants',
             data: {
                 constants: {
@@ -115,7 +115,7 @@ describe('Rennet Service', function () {
             rule: new rules.AlwaysOnRule()
         }));
 
-        service.patchProvider.putPatch(repositoryId, new Patch({
+        service.patchService.putPatch(repositoryId, new Patch({
             id: 'two_is_three',
             data: {
                 constants: {
@@ -125,7 +125,7 @@ describe('Rennet Service', function () {
             rule: new rules.AlwaysOnRule()
         }));
 
-        service.patchProvider.putPatch(repositoryId, new Patch({
+        service.patchService.putPatch(repositoryId, new Patch({
             id: 'three_is_three',
             data: {
                 constants: {
@@ -135,7 +135,7 @@ describe('Rennet Service', function () {
             rule: new rules.AlwaysOnRule()
         }));
 
-        service.patchProvider.putPatch(repositoryId, new Patch({
+        service.patchService.putPatch(repositoryId, new Patch({
             id: 'add_four',
             data: {
                 constants: {
@@ -145,7 +145,7 @@ describe('Rennet Service', function () {
             rule: new rules.AlwaysOnRule()
         }));
 
-        service.patchProvider.putPatch(repositoryId, new Patch({
+        service.patchService.putPatch(repositoryId, new Patch({
             id: 'add_features_table',
             data: {
                 features: {
@@ -156,7 +156,7 @@ describe('Rennet Service', function () {
             rule: new rules.AlwaysOnRule()
         }));
 
-        service.repositoryIndexProvider.putRepositoryIndex(new RepositoryIndex({
+        service.repositoryIndexService.putRepositoryIndex(new RepositoryIndex({
             id: repositoryId,
             branches: {
                 baseline: {
@@ -196,7 +196,7 @@ describe('Rennet Service', function () {
         var repositoryId = 'test';
 
         //test data
-        service.patchProvider.putPatch(repositoryId, new Patch({
+        service.patchService.putPatch(repositoryId, new Patch({
             id: 'constants',
             data: {
                 constants: {
@@ -208,7 +208,7 @@ describe('Rennet Service', function () {
             rule: new rules.AlwaysOnRule()
         }));
 
-        service.repositoryIndexProvider.putRepositoryIndex(new RepositoryIndex({
+        service.repositoryIndexService.putRepositoryIndex(new RepositoryIndex({
             id: repositoryId,
             branches: {
                 baseline: {
@@ -236,7 +236,7 @@ describe('Rennet Service', function () {
         var repositoryId = 'test';
 
         //test data
-        service.patchProvider.putPatch(repositoryId, new Patch({
+        service.patchService.putPatch(repositoryId, new Patch({
             id: 'constants',
             data: {
                 constants: {
@@ -248,7 +248,7 @@ describe('Rennet Service', function () {
             rule: new rules.AlwaysOnRule()
         }));
 
-        service.patchProvider.putPatch(repositoryId, new Patch({
+        service.patchService.putPatch(repositoryId, new Patch({
             id: 'two_is_three',
             data: {
                 constants: {
@@ -258,7 +258,7 @@ describe('Rennet Service', function () {
             rule: new rules.AlwaysOnRule()
         }));
 
-        service.patchProvider.putPatch(repositoryId, new Patch({
+        service.patchService.putPatch(repositoryId, new Patch({
             id: 'two_is_2',
             data: {
                 constants: {
@@ -268,7 +268,7 @@ describe('Rennet Service', function () {
             rule: new rules.AlwaysOnRule()
         }));
 
-        service.patchProvider.putPatch(repositoryId, new Patch({
+        service.patchService.putPatch(repositoryId, new Patch({
             id: 'two_is_four',
             data: {
                 constants: {
@@ -278,7 +278,7 @@ describe('Rennet Service', function () {
             rule: new rules.AlwaysOnRule()
         }));
 
-        service.repositoryIndexProvider.putRepositoryIndex(new RepositoryIndex({
+        service.repositoryIndexService.putRepositoryIndex(new RepositoryIndex({
             id: repositoryId,
             branches: {
                 baseline: {

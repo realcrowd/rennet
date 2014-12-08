@@ -1,14 +1,23 @@
-var Providers = require('../providers');
-var Patch = require('../models/Patch');
 var Q = require('q');
+var Patch = require('../models/Patch');
+var PatchService = require('./PatchService');
+var RepositoryIndexService = require('./RepositoryIndexService');
 
-var RennetService = function() {
+var RennetService = function(configuration) {
     this.branchPatchIdPrefix = 'branch:';
-};
 
-//TODO: DI
-RennetService.prototype.patchProvider = new Providers.PatchProvider();
-RennetService.prototype.repositoryIndexProvider = new Providers.RepositoryIndexProvider();
+    if (configuration && configuration.patchService) {
+        this.patchService = new PatchService(configuration.patchService);
+    } else {
+        this.patchService = new PatchService()
+    }
+
+    if (configuration && configuration.repositoryIndexService) {
+        this.repositoryIndexService = new RepositoryIndexService(configuration.repositoryIndexService);
+    } else {
+        this.repositoryIndexService = new RepositoryIndexService();
+    }
+};
 
 RennetService.prototype.expandPatchList = function(repositoryIndex, branch, depth) {
     var results = [];
@@ -47,11 +56,11 @@ RennetService.prototype.resolveContext = function(repositoryId, branchId, contex
         throw new Error("A branchId is required");
     }
 
-    var patchProvider = this.patchProvider;
-    var patchService = this;
+    var patchService = this.patchService;
+    var rennetService = this;
 
     //get the repository index so we know how to apply patches
-    return this.repositoryIndexProvider.getRepositoryIndex(repositoryId)
+    return this.repositoryIndexService.getRepositoryIndex(repositoryId)
         .then(function(repositoryIndex) {
             if (!repositoryIndex) {
                 throw new Error("Repository Index not found for " + repositoryId);
@@ -62,11 +71,11 @@ RennetService.prototype.resolveContext = function(repositoryId, branchId, contex
             }
 
             //the expanded, in order, list of patches to apply
-            var patchList = patchService.expandPatchList(repositoryIndex, repositoryIndex.branches[branchId]);
+            var patchList = rennetService.expandPatchList(repositoryIndex, repositoryIndex.branches[branchId]);
 
             //this is going to load all the patches into memory a couple times.
             //might want to be smarter about this in the future and add more round trips to the provider.
-            return patchProvider.getPatches(repositoryId, patchList);
+            return patchService.getPatches(repositoryId, patchList);
         })
         .then(function(patches) {
             //we have the list of patches to apply, in order. do it.

@@ -6,7 +6,7 @@ var rennetService = new RennetService();
 var putRepository = function(req, res, next) {
     //TODO: handle etags
 
-    rennetService.repositoryIndexProvider
+    rennetService.repositoryIndexService
         .putRepositoryIndex(req.body)
         .then(function(repositoryIndex){
             res.send(repositoryIndex);
@@ -21,7 +21,7 @@ router.post('/repository/:repositoryId', putRepository);
 router.put('/repository/:repositoryId', putRepository);
 
 router.get('/repository/:repositoryId', function (req, res, next) {
-    rennetService.repositoryIndexProvider
+    rennetService.repositoryIndexService
         .getRepositoryIndex(req.params.repositoryId)
         .then(function(repositoryIndex){
             res.send(repositoryIndex);
@@ -32,7 +32,7 @@ router.get('/repository/:repositoryId', function (req, res, next) {
 var putPatch = function(req, res, next) {
     //TODO: handle etags
 
-    rennetService.patchProvider
+    rennetService.patchService
         .putPatch(req.params.repositoryId, req.body)
         .then(function(patch){
             res.send(patch);
@@ -48,7 +48,7 @@ router.post('/repository/:repositoryId/patch/:patchId', putPatch);
 router.put('/repository/:repositoryId/patch/:patchId', putPatch);
 
 router.get('/repository/:repositoryId/patch/:patchId', function (req, res, next) {
-    rennetService.patchProvider
+    rennetService.patchService
         .getPatch(req.params.repositoryId, req.params.patchId)
         .then(function(patch){
             res.send(patch);

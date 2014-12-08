@@ -1,26 +1,22 @@
 {
-  "Providers": {
-    "patchProvider": "documentdb/DocumentDbPatchProvider",
-    "repositoryIndexProvider": "documentdb/DocumentDbRepositoryIndexProvider"
-  },
-  "DocumentDbPatchProvider": {
-    "documentDbConnection": {
-      "urlConnection": "https://rennet-oss.documents.azure.com:443/",
-      "auth": {"masterKey":"7rvoVz+UvuFOnxjCGbMilgdRlJX3r1KS8VWwaYVoDWo87KbXggUqa98shuTAVCeW9kn3a2I1PwH5qMB+Q659ng=="},
-      "databaseDefinition": {"id": "rennet-demo"},
-      "collectionDefinition": {"id": "rennet"},
-      "connectionPolicy":null,
-      "consistencyLevel":"Session"
+  "PatchService": {
+    "dataProvider":{
+      "module": "DocumentDbDataProvider",
+      "configKey": "DocumentDb"
     }
   },
-  "DocumentDbRepositoryIndexProvider": {
-    "documentDbConnection": {
-      "urlConnection": "https://rennet-oss.documents.azure.com:443/",
-      "auth": {"masterKey":"7rvoVz+UvuFOnxjCGbMilgdRlJX3r1KS8VWwaYVoDWo87KbXggUqa98shuTAVCeW9kn3a2I1PwH5qMB+Q659ng=="},
-      "databaseDefinition": {"id": "rennet-demo"},
-      "collectionDefinition": {"id": "rennet"},
-      "connectionPolicy":null,
-      "consistencyLevel":"Session"
+  "RepositoryIndexService": {
+    "dataProvider":{
+      "module": "DocumentDbDataProvider",
+      "configKey": "DocumentDb"
     }
+  },
+  "DocumentDb": {
+    "urlConnection": "https://rennet-oss.documents.azure.com:443/",
+    "auth": {"masterKey":"7rvoVz+UvuFOnxjCGbMilgdRlJX3r1KS8VWwaYVoDWo87KbXggUqa98shuTAVCeW9kn3a2I1PwH5qMB+Q659ng=="},
+    "databaseDefinition": {"id": "rennet-demo"},
+    "collectionDefinition": {"id": "rennet"},
+    "connectionPolicy": null,
+    "consistencyLevel": "Session"
   }
 }
