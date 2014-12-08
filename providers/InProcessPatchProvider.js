@@ -1,6 +1,7 @@
 var Q = require('q');
 var extend = require('extend');
 var PatchProvider = require('./PatchProvider');
+var Patch = require('../models/Patch');
 
 var InProcessPatchProvider = function(){
     this.patches = {};
@@ -20,9 +21,8 @@ InProcessPatchProvider.prototype.getPatch = function(repositoryId, id) {
     }
 
     var patch = patches[repositoryId][id];
-    var clone = extend(true, {}, patch);
 
-    return Q(clone);
+    return Q(new Patch(patch));
 };
 
 InProcessPatchProvider.prototype.putPatch = function(repositoryId, patch) {
@@ -39,7 +39,7 @@ InProcessPatchProvider.prototype.putPatch = function(repositoryId, patch) {
     var clone = extend(true, {}, patch);
     patches[repositoryId][patch.id] = clone;
 
-    return Q(clone);
+    return Q(new Patch(clone));
 };
 
 module.exports = InProcessPatchProvider;

@@ -1,6 +1,7 @@
 var Q = require('q');
 var extend = require('extend');
 var RepositoryIndexProvider = require('./RepositoryIndexProvider');
+var RepositoryIndex = require('../models/RepositoryIndex');
 
 var InProcessRepositoryIndexProvider = function(){
     this.repositoryIndexes = {};
@@ -16,9 +17,8 @@ InProcessRepositoryIndexProvider.prototype.getRepositoryIndex = function(reposit
     }
 
     var repositoryIndex = repositoryIndexes[repositoryId];
-    var clone = extend(true, {}, repositoryIndex);
 
-    return Q(clone);
+    return Q(new RepositoryIndex(repositoryIndex));
 };
 
 InProcessRepositoryIndexProvider.prototype.putRepositoryIndex = function(repositoryIndex) {
@@ -31,7 +31,7 @@ InProcessRepositoryIndexProvider.prototype.putRepositoryIndex = function(reposit
     var clone = extend(true, {}, repositoryIndex);
     repositoryIndexes[repositoryIndex.id] = clone;
 
-    return Q(clone);
+    return Q(new RepositoryIndex(clone));
 };
 
 module.exports = InProcessRepositoryIndexProvider;
