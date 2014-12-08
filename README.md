@@ -1,7 +1,11 @@
 ﻿# rennet
-Rennet is a JSON document database with git-like branching, chaining and merging of documents based on a simple rules pipeline. This enables reading data that is dependent on the current context of the application.
+Rennet is a JSON document database that enables branching, chaining and merging of documents based on a simple rules pipeline. This allows you to read data that is transformed dependent on the current context of the application. Let's call this "context-aware data".
 
-There are a few use cases where this system is valuable.
+A clean separation of metadata and code is a key enabler for rapid development on teams. It enables developers to continuously ship code and limits the impact of bugs. With context-aware data provided by something like rennet, developers can ship code, enable QA to test it, expose it to subsets of users/environments, and can place ultimate control of the product in the hands of the product owner.
+
+In video games this is very common practice, with data files defining everything about the game. Nowadays game data is modified on the fly in production over the internet, and integrated with A/B testing, in order to increase key performance indicators. It is less common in web or app development, but just as useful. At [RealCrowd](https://www.realcrowd.com) we use this primarily to simplify parallel development and continuous integration, with developers committing to the master branch and deploying to production often with limited impact on the end user.
+
+Some especially useful areas for context-aware data:
 
 1. Environment and user-based configuration of features
 2. Authorization
@@ -9,14 +13,12 @@ There are a few use cases where this system is valuable.
 4. Dynamic configuration in general
 5. Localization
 
-Rennet is currently an api-only system, but we would like to build a management UI for it. By default it starts up with in-process ephemeral storage. This makes development and testing fast, but is not usable in production. A [Azure DocumentDb](http://azure.microsoft.com/en-us/services/documentdb/) storage provider is included for persistent storage of documents. A test account access key is provided for now, until someone abuses it. Data storage is abstracted into what we call [Providers](https://github.com/realcrowd/rennet/tree/master/providers) so new storage options are easy to create.
+Rennet is currently an api-only system, but we have plans to build a management UI for it. By default it starts up with in-process ephemeral storage. This makes development and testing fast, but is not usable in production. An [Azure DocumentDb](http://azure.microsoft.com/en-us/services/documentdb/) storage provider is included for persistent storage of documents. A test account access key is provided for now, until someone abuses it. Data storage is abstracted into what we call [Providers](https://github.com/realcrowd/rennet/tree/master/providers) so new storage options are easy to create.
 
 ## Usage
-Use case #1, selectively enabling features, is a key enabler for rapid development on teams. It enables developers to continuously ship code and limit impact of bugs. With dynamic configuration through something like Rennet developers can ship code, enable QA to test it, expose it to subsets of users/environments, or even place the release schedule in the hands of the product owner.
+Imagine you have an application called "GitHub" that enables collaboration around git repositories. You want to both make some money and encourage open source development, so you decide to charge users for the ability to host private repositories. You want to set different pricing tiers and offer a different number of private repositories at each tier. This is pretty easy to do in code or with any ole database. But, things get a bit more complex if, say, you want to A/B test the number of tiers, or only roll it out to a percentage of your user base, or have different settings for the QA environment. The code for these scenarios can turn to spaghetti very quickly.
 
-Imagine you have an application called "GitHub" that enables collaboration around git repositories. With this configuration, rennet will toggle features in different deployment environments and for users with different pricing tiers in production. This creates a nice separation of concerns as the GitHub application no longer needs to have code for _why_ a given feature is on or off in the current context, just that it is.
-
-Rennet's branches and patch rules enable non-developers to choose when patches are applied, and allows rules to change without redeploying code.
+With this configuration example, rennet will toggle the configuration for the private repositories feature in different deployment environments and for users with different pricing tiers in production. This creates a nice separation of concerns as the GitHub application no longer needs to have code for _why_ a given feature is on or off in the current context, just that it is.
 
 Check out the demo script in the [tests](https://github.com/realcrowd/rennet/tree/master/tests) directory if you want to run this entire usage example from one script. Curl is required to be in the path and rennet must be running locally on port 1337 for the script to run.
 
@@ -25,7 +27,6 @@ This creates an empty repository with an ID of "github". You can store any other
 
 ```
 curl -X POST -H "Content-Type: application/json" -d "{\"id\":\"github\"}" http://localhost:1337/api/v1/repository/github
-
 ```
 
 ### Add Patches to Repository
@@ -47,7 +48,6 @@ curl -X POST -H "Content-Type: application/json" -d "{\"id\":\"mediumFeatures\",
 curl -X POST -H "Content-Type: application/json" -d "{\"id\":\"largeFeatures\",\"rule\":{\"name\":\"StringMatchesRule\",\"arguments\":{\"jsonPath\":\"$.user.plan\",\"matches\":\"large\"}},\"data\":{\"features\":{\"privateRepository\":50}}}" http://localhost:1337/api/v1/repository/github/patch/largeFeatures
 
 curl -X POST -H "Content-Type: application/json" -d "{\"id\":\"testingFeatures\",\"data\":{\"features\":{\"privateRepository\":1000}}}" http://localhost:1337/api/v1/repository/github/patch/testingFeatures
-
 ```
 
 ### Create Branches with Patches
@@ -57,11 +57,10 @@ In a typical application the qa and prod environments will have much different c
 
 ```
 curl -X PUT -H "Content-Type: application/json" -d "{\"id\":\"github\",\"branches\":{\"master\":{\"patches\":[\"defaultFeatures\"]},\"qa\":{\"patches\":[\"branch:master\",\"testingFeatures\"]},\"prod\":{\"patches\":[\"branch:master\",\"microFeatures\",\"smallFeatures\",\"mediumFeatures\",\"largeFeatures\"]}}}" http://localhost:1337/api/v1/repository/github
-
 ```
 
-### Apply Branch and Patches to a Context
-Now we can use all this data we stored. POST to the repository and branch you want with your application's context. In this case we're just including the expected "user.plan" object that is used in the patch rules. You might also include user id, user roles, a/b test group id, data center id, operating system type, etc to further vary the data.
+### Apply a Branch to a Context
+Now we can use all this data we stored. POST to the repository and branch you want to use with your application's context. In this case we're just including the expected "user.plan" object that is used in the patch rules. You might also include user id, user roles, a/b test group id, data center id, operating system type, computer name, etc to further vary the data.
 
 Notice we also include a "data" node in the context. The patches apply directly to the context at the node that is specified in the [patch](https://github.com/realcrowd/rennet/blob/master/models/Patch.js). The default location is "$.data", but you can change that in the patch. We use the [JSONPath package](https://www.npmjs.org/package/JSONPath) for locating where in the document hierarchy to apply patches and evaluate rules.
 
@@ -71,7 +70,6 @@ curl -X POST -H "Content-Type: application/json" -d "{\"user\":{\"plan\":\"free\
 curl -X POST -H "Content-Type: application/json" -d "{\"user\":{\"plan\":\"free\"},\"data\":{}}" http://localhost:1337/api/v1/repository/github/branch/prod/context
 
 curl -X POST -H "Content-Type: application/json" -d "{\"user\":{\"plan\":\"medium\"},\"data\":{}}" http://localhost:1337/api/v1/repository/github/branch/prod/context
-
 ```
 
 ## How to run me
