@@ -9,20 +9,23 @@ There are a few use cases where this system is valuable.
 4. Dynamic configuration in general
 5. Localization
 
-Rennet is currently an api-only system. Data is stored in [Azure DocumentDb](http://azure.microsoft.com/en-us/services/documentdb/). A test account access key is provided for now, until someone abuses it. Data storage is abstracted into what we call [Providers](https://github.com/realcrowd/rennet/tree/master/providers) so new storage options are easy to create. We have an in process version that is used for the unit/system tests.
+Rennet is currently an api-only system, but we would like to build a management UI for it. By default it starts up with in-process ephemeral storage. This makes development and testing fast, but is not usable in production. A [Azure DocumentDb](http://azure.microsoft.com/en-us/services/documentdb/) storage provider is included for persistent storage of documents. A test account access key is provided for now, until someone abuses it. Data storage is abstracted into what we call [Providers](https://github.com/realcrowd/rennet/tree/master/providers) so new storage options are easy to create.
 
 ## Usage
-We'll tackle use case 1 for this usage example.
+Use case #1, selectively enabling features, is a key enabler for rapid development on teams. It enables developers to continuously ship code and limit impact of bugs. With dynamic configuration through something like Rennet developers can ship code, enable QA to test it, expose it to subsets of users/environments, or even place the release schedule in the hands of the product owner.
 
 Imagine you have an application called "GitHub" that enables collaboration around git repositories. With this configuration, rennet will toggle features in different deployment environments and for users with different pricing tiers in production. This creates a nice separation of concerns as the GitHub application no longer needs to have code for _why_ a given feature is on or off in the current context, just that it is.
 
 Rennet's branches and patch rules enable non-developers to choose when patches are applied, and allows rules to change without redeploying code.
 
+Check out the demo script in the [tests](https://github.com/realcrowd/rennet/tree/master/tests) directory if you want to run this entire usage example from one script. Curl is required to be in the path and rennet must be running locally on port 1337 for the script to run.
+
 ### Create a Repository
 This creates an empty repository with an ID of "github". You can store any other data you'd like on this document, but id is required. Later we'll add some branches into this repository to start exposing transformed data.
 
 ```
-> curl -X POST -H "Content-Type: application/json" -d "{\"id\":\"github\"}" http://localhost:1337/repository/github
+curl -X POST -H "Content-Type: application/json" -d "{\"id\":\"github\"}" http://localhost:1337/api/v1/repository/github
+
 ```
 
 ### Add Patches to Repository
@@ -33,25 +36,27 @@ Let's create a few patches. We'll max out the "privateRepository" feature in the
 For this we'll use the [StringMatchesRule](https://github.com/realcrowd/rennet/blob/master/models/rules/StringMatchesRule.js) to determine the plan that the user is a part of and apply the correct patch to the features data. See the [rules directory](https://github.com/realcrowd/rennet/tree/master/models/rules) for a list of the supported rules.
 
 ```
-> curl -X POST -H "Content-Type: application/json" -d "{\"id\":\"defaultFeatures\",\"data\":{\"features\":{\"privateRepository\":0}}}" http://localhost:1337/repository/github/patch/defaultFeatures
+curl -X POST -H "Content-Type: application/json" -d "{\"id\":\"defaultFeatures\",\"data\":{\"features\":{\"privateRepository\":0}}}" http://localhost:1337/api/v1/repository/github/patch/defaultFeatures
 
-> curl -X POST -H "Content-Type: application/json" -d "{\"id\":\"microFeatures\",\"rule\":{\"name\":\"StringMatchesRule\",\"arguments\":{\"jsonPath\":\"$.user.plan\",\"matches\":\"micro\"}},\"data\":{\"features\":{\"privateRepository\":5}}}" http://localhost:1337/repository/github/patch/microFeatures
+curl -X POST -H "Content-Type: application/json" -d "{\"id\":\"microFeatures\",\"rule\":{\"name\":\"StringMatchesRule\",\"arguments\":{\"jsonPath\":\"$.user.plan\",\"matches\":\"micro\"}},\"data\":{\"features\":{\"privateRepository\":5}}}" http://localhost:1337/api/v1/repository/github/patch/microFeatures
 
-> curl -X POST -H "Content-Type: application/json" -d "{\"id\":\"smallFeatures\",\"rule\":{\"name\":\"StringMatchesRule\",\"arguments\":{\"jsonPath\":\"$.user.plan\",\"matches\":\"small\"}},\"data\":{\"features\":{\"privateRepository\":10}}}" http://localhost:1337/repository/github/patch/smallFeatures
+curl -X POST -H "Content-Type: application/json" -d "{\"id\":\"smallFeatures\",\"rule\":{\"name\":\"StringMatchesRule\",\"arguments\":{\"jsonPath\":\"$.user.plan\",\"matches\":\"small\"}},\"data\":{\"features\":{\"privateRepository\":10}}}" http://localhost:1337/api/v1/repository/github/patch/smallFeatures
 
-> curl -X POST -H "Content-Type: application/json" -d "{\"id\":\"mediumFeatures\",\"rule\":{\"name\":\"StringMatchesRule\",\"arguments\":{\"jsonPath\":\"$.user.plan\",\"matches\":\"medium\"}},\"data\":{\"features\":{\"privateRepository\":20}}}" http://localhost:1337/repository/github/patch/mediumFeatures
+curl -X POST -H "Content-Type: application/json" -d "{\"id\":\"mediumFeatures\",\"rule\":{\"name\":\"StringMatchesRule\",\"arguments\":{\"jsonPath\":\"$.user.plan\",\"matches\":\"medium\"}},\"data\":{\"features\":{\"privateRepository\":20}}}" http://localhost:1337/api/v1/repository/github/patch/mediumFeatures
 
-> curl -X POST -H "Content-Type: application/json" -d "{\"id\":\"largeFeatures\",\"rule\":{\"name\":\"StringMatchesRule\",\"arguments\":{\"jsonPath\":\"$.user.plan\",\"matches\":\"large\"}},\"data\":{\"features\":{\"privateRepository\":50}}}" http://localhost:1337/repository/github/patch/largeFeatures
+curl -X POST -H "Content-Type: application/json" -d "{\"id\":\"largeFeatures\",\"rule\":{\"name\":\"StringMatchesRule\",\"arguments\":{\"jsonPath\":\"$.user.plan\",\"matches\":\"large\"}},\"data\":{\"features\":{\"privateRepository\":50}}}" http://localhost:1337/api/v1/repository/github/patch/largeFeatures
 
-> curl -X POST -H "Content-Type: application/json" -d "{\"id\":\"testingFeatures\",\"data\":{\"features\":{\"privateRepository\":1000}}}" http://localhost:1337/repository/github/patch/testingFeatures
+curl -X POST -H "Content-Type: application/json" -d "{\"id\":\"testingFeatures\",\"data\":{\"features\":{\"privateRepository\":1000}}}" http://localhost:1337/api/v1/repository/github/patch/testingFeatures
 
 ```
 
 ### Create Branches with Patches
-Now we'll update the repository index to define a few branches and put the patches we created to use. We define a "master" branch that holds the default configuration for the application. We define a "qa" branch which contains all the patches from the "master" branch, but also applies the "testingFeatures" patch. We also define a "prod" branch that just contains the "master" patches. In a typical application the qa and prod environments will have much different configurations with various features being in different states of testing, different % of the user base with the feature enabled, etc.
+Now we'll update the repository index to define a few branches and put the patches we created to use. We define a "master" branch that holds the default configuration for the application. We define a "qa" branch which contains all the patches from the "master" branch, but also applies the "testingFeatures" patch. We also define a "prod" branch that contains the "master" patches and all the patches with rules based on the user's plan.
+
+In a typical application the qa and prod environments will have much different configurations with various features being in different states of testing, different percentage of the user base with the feature enabled, etc.
 
 ```
-> curl -X PUT -H "Content-Type: application/json" -d "{\"id\":\"github\",\"branches\":\"master\":{\"patches\":[\"defaultFeatures\",\"microFeatures\",\"smallFeatures\",\"mediumFeatures\",\"largeFeatures\"]},\"qa\":{\"patches\":[\"branch:master\",\"testingFeatures\"]},\"prod\":{\"patches\":[\"branch:master\"]}}" http://localhost:1337/repository/github
+curl -X PUT -H "Content-Type: application/json" -d "{\"id\":\"github\",\"branches\":{\"master\":{\"patches\":[\"defaultFeatures\"]},\"qa\":{\"patches\":[\"branch:master\",\"testingFeatures\"]},\"prod\":{\"patches\":[\"branch:master\",\"microFeatures\",\"smallFeatures\",\"mediumFeatures\",\"largeFeatures\"]}}}" http://localhost:1337/api/v1/repository/github
 
 ```
 
@@ -61,47 +66,42 @@ Now we can use all this data we stored. POST to the repository and branch you wa
 Notice we also include a "data" node in the context. The patches apply directly to the context at the node that is specified in the [patch](https://github.com/realcrowd/rennet/blob/master/models/Patch.js). The default location is "$.data", but you can change that in the patch. We use the [JSONPath package](https://www.npmjs.org/package/JSONPath) for locating where in the document hierarchy to apply patches and evaluate rules.
 
 ```
-> curl -X POST -H "Content-Type: application/json" -d "{\"user\":{\"plan\":\"free\"},\"data\":{}}" http://localhost:1337/repository/github/branch/qa/context
+curl -X POST -H "Content-Type: application/json" -d "{\"user\":{\"plan\":\"free\"},\"data\":{}}" http://localhost:1337/api/v1/repository/github/branch/qa/context
 
-> curl -X POST -H "Content-Type: application/json" -d "{\"user\":{\"plan\":\"free\"},\"data\":{}}" http://localhost:1337/repository/github/branch/prod/context
+curl -X POST -H "Content-Type: application/json" -d "{\"user\":{\"plan\":\"free\"},\"data\":{}}" http://localhost:1337/api/v1/repository/github/branch/prod/context
 
-> curl -X POST -H "Content-Type: application/json" -d "{\"user\":{\"plan\":\"medium\"},\"data\":{}}" http://localhost:1337/repository/github/branch/prod/context
-
-```
-
-## Generic dev environment setup
+curl -X POST -H "Content-Type: application/json" -d "{\"user\":{\"plan\":\"medium\"},\"data\":{}}" http://localhost:1337/api/v1/repository/github/branch/prod/context
 
 ```
-> git clone https://github.com/realcrowd/rennet.git
 
-> cd rennet
-
-> npm install -g bower
-
-> npm install
-
-> bower install
-
-> node http.js
-```
-
-## Dev environment setup in Visual Studio / Windows
-1. Install Msysgit (http://msysgit.github.io/)
-	- Make sure to choose the "Run Git from the Windows Command Prompt" option during setup, which will add Git to your path
-2. Install node.js, Visual Studio 2013, and Node.js Tools for Visual Studio (https://nodejstools.codeplex.com/wikipage?title=Installation)
-3. Open project, right click the npm node in solution explorer and choose "Install missing npm packages"
-4. Open Node.js interactive window in Visual Studio (View -> Other Windows -> Node.js Interactive Window)
-5. Install bower globally so it is available in your command prompt:
+## How to run me
 
 ```
-> .npm install -g bower
+git clone https://github.com/realcrowd/rennet.git
+
+cd rennet
+
+npm install -g bower
+
+npm install
+
+bower install
+
+node http.js
 ```
 
-6. Open a command prompt in the project root (rennet/rennet) and install/restore bower packages
+## Contributing
+See our [Contributing](https://github.com/realcrowd/rennet/blob/master/CONTRIBUTING.md) doc for details on contributing. Just do it.
 
-```
-> bower install
-```
-
-## Running the tests
-Mocha tests are in the "tests" directory. They should be run with environment variable NODE_ENV=test. TODO: setup 'npm test'. We currently run them from within WebStorm or Visual Studio.
+## TODO
+* Setup 'npm test'
+* Etag support (etag, if-match, if-none-match) for optimistic concurrency control
+* Logging
+* Performance monitoring
+* Load testing
+* Caching providers
+* User interface for managing patches and rules
+* More rules. i.e. multi rule, number comparison `>, <, >=, <=, ==, %`, user-defined script, ?
+* MongoDB, filesystem, Redis, other document storage options (what do you want?)
+* Client libraries
+* JSON error formatting
