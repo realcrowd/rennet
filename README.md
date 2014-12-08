@@ -93,6 +93,7 @@ See our [Contributing](https://github.com/realcrowd/rennet/blob/master/CONTRIBUT
 
 ## TODO
 * Setup 'npm test'
+* DELETE support
 * Etag support (etag, if-match, if-none-match) for optimistic concurrency control
 * Logging
 * Performance monitoring
@@ -103,3 +104,5 @@ See our [Contributing](https://github.com/realcrowd/rennet/blob/master/CONTRIBUT
 * MongoDB, filesystem, Redis, other document storage options (what do you want?)
 * Client libraries
 * JSON error formatting
+* Authentication/Authorization
+* Refactor services to remove some boilerplate
