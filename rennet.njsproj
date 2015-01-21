@@ -31,35 +31,99 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="app.js" />
+    <Compile Include="bower_components\angularjs\angular.js" />
+    <Compile Include="bower_components\angularjs\angular.min.js" />
+    <Compile Include="bower_components\bootstrap\dist\js\bootstrap.js" />
+    <Compile Include="bower_components\bootstrap\dist\js\bootstrap.min.js" />
+    <Compile Include="bower_components\bootstrap\dist\js\npm.js" />
+    <Compile Include="bower_components\html5shiv\dist\html5shiv-printshiv.js" />
+    <Compile Include="bower_components\html5shiv\dist\html5shiv-printshiv.min.js" />
+    <Compile Include="bower_components\html5shiv\dist\html5shiv.js" />
+    <Compile Include="bower_components\html5shiv\dist\html5shiv.min.js" />
+    <Compile Include="bower_components\jquery\dist\jquery.js" />
+    <Compile Include="bower_components\jquery\dist\jquery.min.js" />
+    <Compile Include="bower_components\respond\dest\respond.matchmedia.addListener.min.js" />
+    <Compile Include="bower_components\respond\dest\respond.matchmedia.addListener.src.js" />
+    <Compile Include="bower_components\respond\dest\respond.min.js" />
+    <Compile Include="bower_components\respond\dest\respond.src.js" />
+    <Compile Include="http.js" />
     <Compile Include="models\Patch.js" />
+    <Compile Include="models\RepositoryIndex.js" />
     <Compile Include="models\Rule.js" />
+    <Compile Include="models\rules\AlwaysOffRule.js" />
     <Compile Include="models\rules\AlwaysOnRule.js" />
     <Compile Include="models\rules\ArrayContainsRule.js" />
+    <Compile Include="models\rules\index.js" />
     <Compile Include="models\rules\StringMatchesRule.js" />
+    <Compile Include="providers\DataProvider.js" />
+    <Compile Include="providers\DocumentDbDataProvider.js" />
+    <Compile Include="providers\InProcessDataProvider.js" />
     <Compile Include="public\js\rennet.js" />
     <Compile Include="routes\api.js" />
     <Compile Include="routes\index.js" />
-    <Compile Include="routes\passport.js" />
-    <Compile Include="routes\users.js" />
     <Compile Include="bin\www" />
+    <Compile Include="services\DataService.js" />
+    <Compile Include="services\PatchService.js" />
+    <Compile Include="services\RennetService.js" />
+    <Compile Include="services\RepositoryIndexService.js" />
+    <Compile Include="tests\dataProviderTests.js" />
     <Compile Include="tests\patchTests.js">
       <SubType>Code</SubType>
       <TestFramework>Mocha</TestFramework>
     </Compile>
+    <Compile Include="tests\rennetServiceTests.js" />
+    <Compile Include="tests\ruleTests.js" />
     <Content Include="bower.json" />
+    <Content Include="bower_components\angularjs\angular-csp.css" />
+    <Content Include="bower_components\angularjs\angular.min.js.gzip" />
+    <Content Include="bower_components\angularjs\angular.min.js.map" />
+    <Content Include="bower_components\bootstrap\dist\css\bootstrap-theme.css" />
+    <Content Include="bower_components\bootstrap\dist\css\bootstrap-theme.css.map" />
+    <Content Include="bower_components\bootstrap\dist\css\bootstrap-theme.min.css" />
+    <Content Include="bower_components\bootstrap\dist\css\bootstrap.css" />
+    <Content Include="bower_components\bootstrap\dist\css\bootstrap.css.map" />
+    <Content Include="bower_components\bootstrap\dist\css\bootstrap.min.css" />
+    <Content Include="bower_components\bootstrap\dist\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="bower_components\bootstrap\dist\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="bower_components\bootstrap\dist\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="bower_components\bootstrap\dist\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="bower_components\jquery\dist\jquery.min.map" />
+    <Content Include="config\azure.json" />
     <Content Include="config\default.json" />
+    <Content Include="config\rcazure.json" />
+    <Content Include="config\test.json" />
+    <Content Include="CONTRIBUTING.md" />
+    <Content Include="LICENSE.md" />
     <Content Include="package.json" />
+    <Content Include="public\stylesheets\style.css" />
     <Content Include="public\stylesheets\style.styl" />
     <Content Include="README.md" />
+    <Content Include="tests\demo.cmd" />
+    <Content Include="tests\demo.sh" />
     <Content Include="views\index.jade" />
     <Content Include="views\layout.jade" />
     <Content Include="views\error.jade" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\" />
+    <Folder Include="bower_components\" />
+    <Folder Include="bower_components\angularjs\" />
+    <Folder Include="bower_components\bootstrap\" />
+    <Folder Include="bower_components\bootstrap\dist\" />
+    <Folder Include="bower_components\bootstrap\dist\css\" />
+    <Folder Include="bower_components\bootstrap\dist\fonts\" />
+    <Folder Include="bower_components\bootstrap\dist\js\" />
+    <Folder Include="bower_components\html5shiv\" />
+    <Folder Include="bower_components\html5shiv\dist\" />
+    <Folder Include="bower_components\jquery\" />
+    <Folder Include="bower_components\jquery\dist\" />
+    <Folder Include="bower_components\respond\" />
+    <Folder Include="bower_components\respond\dest\" />
     <Folder Include="config\" />
     <Folder Include="models\" />
     <Folder Include="models\rules\" />
+    <Folder Include="providers\" />
+    <Folder Include="services\" />
     <Folder Include="tests\" />
     <Folder Include="public\" />
     <Folder Include="public\images\" />
@@ -69,7 +133,6 @@
     <Folder Include="views\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="views\login.jade" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config" />
     <Content Include="bin\ChangeConfig.ps1" />
