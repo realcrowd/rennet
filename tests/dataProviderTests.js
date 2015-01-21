@@ -12,6 +12,10 @@ describe('Data Providers', function () {
         {
             constructor: require('../providers/DocumentDbDataProvider'),
             configuration: config.get('DocumentDb')
+        },
+        {
+            constructor: require('../providers/RedisDataProvider'),
+            configuration: config.get('Redis')
         }
     ];
 
