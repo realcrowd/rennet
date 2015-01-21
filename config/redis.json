@@ -1,0 +1,19 @@
+{
+  "PatchService": {
+    "dataProvider":{
+      "module": "RedisDataProvider",
+      "configKey": "Redis"
+    }
+  },
+  "RepositoryIndexService": {
+    "dataProvider":{
+      "module": "RedisDataProvider",
+      "configKey": "Redis"
+    }
+  },
+  "Redis": {
+    "host": "127.0.0.1",
+    "port": 6379,
+    "options": {}
+  }
+}

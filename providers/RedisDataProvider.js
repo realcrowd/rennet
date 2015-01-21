@@ -11,21 +11,23 @@ var RedisDataProvider = function(config) {
 
 RedisDataProvider.prototype = new DataProvider();
 
-RedisDataProvider.prototype.getDocument = function(id) {
-    //todo: wait for auth if required
-    //todo: read from redis
-    var docAsJson = this.data[id];
-    var document = JSON.parse(docAsJson);
+RedisDataProvider.prototype.getDocumentId = function(id) {
+    return "rennet:doc:" + id;
+};
 
-    return Q(document);
+RedisDataProvider.prototype.getDocument = function(id) {
+    return Q.ninvoke(this.client, "get", this.getDocumentId(id))
+        .then(function(docAsJson) {
+            return JSON.parse(docAsJson);
+        });
 };
 
 RedisDataProvider.prototype.putDocument = function(id, document) {
-    //todo: wait for auth if required
-    //todo: write to redis
     var docAsJson = JSON.stringify(document);
-
-
+    return Q.ninvoke(this.client, "set", this.getDocumentId(id), docAsJson)
+        .then(function() {
+            return document;
+        });
 };
 
 RedisDataProvider.prototype.applyConfiguration = function(config) {
@@ -40,8 +42,6 @@ RedisDataProvider.prototype.applyConfiguration = function(config) {
     this.config = extend(true, defaultConfig, config);
 
     this.client = redis.createClient(this.config.port, this.config.host, this.config.options);
-
-    //todo: auth if required
 };
 
 
