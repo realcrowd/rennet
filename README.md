@@ -13,7 +13,7 @@ Some especially useful areas for context-aware data:
 4. Dynamic configuration in general
 5. Localization
 
-Rennet is currently an api-only system, but we have plans to build a management UI for it. By default it starts up with in-process ephemeral storage. This makes development and testing fast, but is not usable in production. An [Azure DocumentDb](http://azure.microsoft.com/en-us/services/documentdb/) storage provider is included for persistent storage of documents. A test account access key is provided for now, until someone abuses it. Data storage is abstracted into what we call [Providers](https://github.com/realcrowd/rennet/tree/master/providers) so new storage options are easy to create.
+Rennet is currently an api-only system, but we have plans to build a management UI for it. By default it starts up with in-process ephemeral storage. This makes development and testing fast, but is not usable in production. A [Redis](http://redis.io/) as well as an [Azure DocumentDb](http://azure.microsoft.com/en-us/services/documentdb/) storage provider are included for persistent storage of documents. Data storage is abstracted into what we call [Providers](https://github.com/realcrowd/rennet/tree/master/providers) so new storage options are easy to create.
 
 ## Usage
 Imagine you have an application called "GitHub" that enables collaboration around git repositories. You want to both make some money and encourage open source development, so you decide to charge users for the ability to host private repositories. You want to set different pricing tiers and offer a different number of private repositories at each tier. This is pretty easy to do in code or with any ole database. But, things get a bit more complex if, say, you want to A/B test the number of tiers, or only roll it out to a percentage of your user base, or have different settings for the QA environment. The code for these scenarios can turn to spaghetti very quickly.
@@ -101,7 +101,7 @@ See our [Contributing](https://github.com/realcrowd/rennet/blob/master/CONTRIBUT
 * Caching providers
 * User interface for managing patches and rules
 * More rules. i.e. multi rule, number comparison `>, <, >=, <=, ==, %`, user-defined script, ?
-* MongoDB, filesystem, Redis, other document storage options (what do you want?)
+* MongoDB, filesystem, other document storage options (what do you want?)
 * Client libraries
 * JSON error formatting
 * Authentication/Authorization
